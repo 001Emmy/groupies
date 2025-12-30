@@ -1,21 +1,18 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
-import { readFile } from "fs/promises";
-import { join } from "path";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-async function extractPdfText(filepath: string): Promise<string> {
+async function extractPdfText(base64Content: string): Promise<string> {
   try {
-    // For now, use a simple placeholder extraction
-    // In production, you would use pdfjs-dist or a server-side PDF parser
-    // This returns sample text for demonstration
+    // For now, use a simple placeholder extraction since base64 PDF parsing is complex
+    // In production, you would use pdfjs-dist library to extract text from PDF
     const sampleText = `This is sample educational content extracted from your PDF document. 
-    The AI will generate questions based on your actual PDF content once you configure the PDF extraction library.
-    For production use, integrate pdfjs-dist or python-based PDF parsing like PyPDF2 or pdfplumber.`;
+    The AI will generate questions based on your actual PDF content.
+    For production use, implement client-side PDF.js extraction or use an external PDF parsing API.`;
     
     return sampleText;
   } catch (error) {
@@ -41,13 +38,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Extract text from PDF
+    // Extract text from PDF (now stored as Base64)
     const pdfText = await extractPdfText(document.filePath);
 
     if (!pdfText) {
       return NextResponse.json(
         { error: "Could not extract text from PDF" },
         { status: 400 }
+      );
+    }
+
+    // Verify OpenAI API key is configured
+    if (!process.env.OPENAI_API_KEY) {
+      return NextResponse.json(
+        { error: "OpenAI API key not configured" },
+        { status: 500 }
       );
     }
 

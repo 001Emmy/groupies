@@ -1,8 +1,5 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
-import { existsSync } from "fs";
 
 export async function POST(request: NextRequest) {
   try {
@@ -30,21 +27,14 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Create uploads directory if it doesn't exist
-    const uploadsDir = join(process.cwd(), "public", "uploads");
-    if (!existsSync(uploadsDir)) {
-      await mkdir(uploadsDir, { recursive: true });
-    }
+    // Convert to Base64 for storage in database
+    const base64Content = buffer.toString("base64");
 
     // Generate unique filename
     const timestamp = Date.now();
     const filename = `${timestamp}-${file.name}`;
-    const filepath = join(uploadsDir, filename);
 
-    // Save file
-    await writeFile(filepath, buffer);
-
-    // Save to database
+    // Save to database (with Base64 encoded content)
     const document = await prisma.document.create({
       data: {
         filename,
@@ -52,7 +42,7 @@ export async function POST(request: NextRequest) {
         courseId,
         courseName,
         fileSize: buffer.length,
-        filePath: `/uploads/${filename}`,
+        filePath: base64Content, // Store Base64 content in filePath field
       },
     });
 
