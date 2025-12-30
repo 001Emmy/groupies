@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Course {
+  id        String     @id @default(cuid())
+  name      String
+  description String?
+  color     String     @default("#3b82f6")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  documents Document[]
+
+  @@index([createdAt])
+}
+
+model Document {
+  id        String     @id @default(cuid())
+  filename  String
+  originalName String
+  courseName String
+  courseId  String
+  course    Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  fileSize  Int
+  uploadedAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  filePath  String
+
+  questions Question[]
+
+  @@index([courseId])
+  @@index([uploadedAt])
+}
+
+model Question {
+  id        String     @id @default(cuid())
+  text      String
+  type      String     @default("multiple-choice")
+  options   String?
+  answer    String?
+  documentId String
+  document  Document   @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([documentId])
+}
