@@ -41,16 +41,26 @@ A modern web application for students to organize their school PDF documents by 
 
 ## 📖 Documentation
 
-- **[BUILD_COMPLETE.md](./BUILD_COMPLETE.md)** - Build summary & next steps
-- **[QUICK_START.md](./QUICK_START.md)** - Get started in 5 minutes
+### Getting Started
+- **[VERCEL_STEP_BY_STEP.md](./VERCEL_STEP_BY_STEP.md)** - ⚡ **START HERE** - Deploy to Vercel in 10 minutes
+- **[QUICK_START.md](./QUICK_START.md)** - Get started locally in 5 minutes
+
+### Deployment
+- **[VERCEL_DEPLOYMENT_FIXES.md](./VERCEL_DEPLOYMENT_FIXES.md)** - 🔧 All Vercel fixes applied & common errors
+- **[DEPLOY_QUICK_GUIDE.md](./DEPLOY_QUICK_GUIDE.md)** - Quick deployment guide
+- **[VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md)** - Detailed Vercel setup
+
+### Reference
+- **[BUILD_COMPLETE.md](./BUILD_COMPLETE.md)** - Build summary
 - **[SETUP_GUIDE.md](./SETUP_GUIDE.md)** - Detailed setup reference
 - **[PROJECT_INFO.md](./PROJECT_INFO.md)** - Technical documentation
+- **[POSTGRES_SETUP.md](./POSTGRES_SETUP.md)** - PostgreSQL local setup
 
 ## 💻 Tech Stack
 
 - **Frontend:** React 19, Next.js 16, TypeScript, Tailwind CSS
 - **Backend:** Next.js API Routes
-- **Database:** SQLite + Prisma ORM
+- **Database:** PostgreSQL (Vercel) / SQLite (Local dev) with Prisma ORM
 - **AI:** OpenAI GPT-3.5-turbo
 - **UI:** Lucide Icons, next-themes
 
@@ -115,12 +125,21 @@ groupies/
 
 ## 🔐 Configuration
 
+### Local Development
 Create `.env.local`:
 ```
-DATABASE_URL="file:./dev.db"
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/groupies"
 OPENAI_API_KEY="sk-your-api-key"
 NEXT_PUBLIC_API_URL="http://localhost:3000"
 ```
+
+### Vercel Deployment
+Set these in Vercel Settings → Environment Variables:
+- `DATABASE_URL` - Your PostgreSQL connection (Neon, Supabase, or Railway)
+- `OPENAI_API_KEY` - Your OpenAI API key
+- `NEXT_PUBLIC_API_URL` - Your Vercel app URL
+
+**⚠️ Important:** Make sure all variables are in **Production** environment!
 
 ## 🐛 Troubleshooting
 
@@ -147,32 +166,39 @@ npm run dev
 
 ## 🚀 Deployment
 
-### Deploy to Vercel (Recommended)
+### 🟢 Deploy to Vercel (10 minutes) - RECOMMENDED
 
-Your app is **fully configured for Vercel**! Deploy in 10 minutes:
+Your app is **fully configured for Vercel**! Follow this exact guide:
 
-1. **See:** `DEPLOY_QUICK_GUIDE.md` for step-by-step instructions
-2. **Alternative detailed guide:** `VERCEL_DEPLOYMENT.md`
-3. **Setup PostgreSQL locally (optional):** `POSTGRES_SETUP.md`
+**👉 [READ: VERCEL_STEP_BY_STEP.md](./VERCEL_STEP_BY_STEP.md)** - Step-by-step deployment guide
 
-After deployment, share the live link with your team!
+**TL;DR:**
+1. Create PostgreSQL database (Neon.tech, Supabase, or Railway)
+2. Add 3 environment variables to Vercel dashboard
+3. Redeploy your app
+4. Done! Share the live link with your team
 
-### Quick Vercel Deploy:
+### Status of This App
 
-```bash
-npm install -g vercel
-vercel
-```
+✅ **Vercel Ready** - All Vercel fixes applied (removed file system writes, proper Prisma config)  
+✅ **Production Ready** - No additional configuration needed  
+✅ **Team Ready** - Deploy once, share live link with team  
+✅ **PostgreSQL Configured** - Automatically uses Vercel-compatible database  
 
-Then add environment variables in Vercel dashboard and redeploy.
+### What's Different for Vercel
 
-### Status
+- **Database:** SQLite (local) → PostgreSQL (Vercel)
+- **File Storage:** File system → Base64 in database
+- **Build:** Prisma auto-generates client during build
 
-✅ **Vercel Ready** - Changed from SQLite to PostgreSQL
-✅ **Production Ready** - No additional configuration needed
-✅ **Team Ready** - Share live link immediately after deployment
+### More Deployment Help
 
-**See `VERCEL_READY.md` for complete deployment info!**
+- **Quick guide:** `DEPLOY_QUICK_GUIDE.md`
+- **Detailed guide:** `VERCEL_DEPLOYMENT.md`
+- **Common fixes:** `VERCEL_DEPLOYMENT_FIXES.md`
+- **Local PostgreSQL:** `POSTGRES_SETUP.md`
+
+---
 
 ## 📝 License
 
